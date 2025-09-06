@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OMRify – Upload & Results</title>
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      /* Colors */
+      --blue-600:#2563EB; /* Primary */
+      --blue-700:#1D4ED8; /* Hover */
+      --dark:#111827;     /* Text */
+      --gray-400:#9CA3AF;
+      --gray-500:#6B7280;
+      --gray-200:#E5E7EB;
+      --gray-100:#F3F4F6;
+      --surface:#F9FAFB;
+      --white:#FFFFFF;
+      --success:#10B981;
+      --danger:#EF4444;
+
+      --radius-8:8px;
+      --radius-12:12px;
+      --radius-16:16px;
+
+      --shadow-header:0 2px 8px rgba(17,24,39,0.15);
+      --shadow-card:0 1px 2px rgba(17,24,39,0.06), 0 1px 3px rgba(17,24,39,0.1);
+
+      --container-max:1440px;
+      --gutter:24px;
+      --page-padding:120px;
+
+      --fz-28:28px; /* Heading */
+      --fz-20:20px;
+      --fz-16:16px; /* Body */
+      --fz-14:14px;
+      --fz-12:12px; /* Caption */
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Inter, Roboto, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+      color:var(--dark); background:var(--surface);
+      line-height:1.5;
+    }
+    a{color:inherit; text-decoration:none}
+
+    /* Container & 12-col grid */
+    .container{max-width:var(--container-max); margin:0 auto; padding-inline:var(--page-padding)}
+    .grid{display:grid; grid-template-columns:repeat(12, 1fr); gap:var(--gutter)}
+    .span-12{grid-column:span 12}
+    .span-8{grid-column:span 8}
+    .span-6{grid-column:span 6}
+    .span-4{grid-column:span 4}
+    .span-3{grid-column:span 3}
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--blue);
+      box-shadow: 0 2px 8px rgba(17,24,39,0.15);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      height: 80px;
+    } 
+    .brand{font-size:var(--fz-20); font-weight:700}
+    .nav{display:flex; align-items:center; gap:24px}
+    .logout{background:var(--danger); color:var(--white); border:none; border-radius:var(--radius-8); height:36px; padding:0 16px; font-size:var(--fz-12); font-weight:600; cursor:pointer}
+
+    /* Typography */
+    .h1{font-size:var(--fz-28); font-weight:700; margin:0}
+    .subtle{color:var(--gray-500)}
+
+    /* Section spacing */
+    .section{padding-block:32px}
+
+    /* Upload box */
+    .upload-wrap{display:flex; justify-content:center}
+    .upload-box{
+      width:600px; height:320px; background:var(--surface); border-radius:var(--radius-16);
+      border:2px dashed var(--gray-400); display:flex; align-items:center; justify-content:center; text-align:center; padding:24px;
+    }
+    .upload-content{display:flex; flex-direction:column; align-items:center; gap:8px}
+    .upload-content p{margin:0}
+    .muted{color:var(--gray-400); font-size:var(--fz-12)}
+    .upload-input{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+    .upload-button{display:inline-flex; align-items:center; gap:8px; font-weight:600; color:var(--blue-600); cursor:pointer}
+
+    /* File list */
+    .list{display:flex; flex-direction:column; gap:12px}
+    .file-row{background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-12); padding:14px 16px; display:flex; align-items:center; gap:16px; box-shadow:var(--shadow-card)}
+    .file-row .name{font-size:var(--fz-16)}
+    .spacer{flex:1}
+    .status{display:inline-flex; align-items:center; gap:8px; font-size:var(--fz-14)}
+    .dot{width:10px; height:10px; border-radius:999px}
+    .dot.success{background:var(--success)}
+    .dot.danger{background:var(--danger)}
+    .icon-btn{width:36px; height:36px; display:grid; place-items:center; border:1px solid var(--gray-200); border-radius:var(--radius-8); background:var(--white)}
+
+    /* Primary button */
+    .btn-primary{display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--blue-600); color:var(--white); border:none; border-radius:var(--radius-12); padding:14px 24px; font-size:var(--fz-16); font-weight:700; cursor:pointer}
+    .btn-primary:hover{background:var(--blue-700)}
+
+    /* Cards */
+    .card{background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-12); padding:16px; box-shadow:var(--shadow-card)}
+    .card .label{font-size:var(--fz-12); color:var(--gray-500)}
+    .card .value{font-size:24px; font-weight:700}
+
+    /* Table */
+    .table{border:1px solid var(--gray-200); border-radius:var(--radius-12); overflow:hidden; background:var(--white)}
+    .table-head{background:var(--gray-100); display:grid; grid-template-columns:100px 1fr 120px 120px 160px; align-items:center; height:48px; padding:0 16px; font-weight:600}
+    .table-row{display:grid; grid-template-columns:100px 1fr 120px 120px 160px; align-items:center; height:64px; padding:0 16px; border-top:1px solid var(--gray-200)}
+    .avatar{width:32px; height:32px; border-radius:999px; background:var(--gray-100); display:grid; place-items:center; font-size:var(--fz-12); font-weight:700}
+    .row-actions{display:flex; gap:8px}
+
+    /* Footer */
+    footer{padding:24px 0; text-align:center; color:var(--gray-500); font-size:var(--fz-12)}
+
+    /* Modal via :target */
+    .overlay{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(17,24,39,0.5); padding:24px}
+    .overlay:target{display:flex}
+    .modal{width:min(700px, 92vw); max-height:90vh; overflow:auto; background:var(--white); border-radius:var(--radius-12); box-shadow:var(--shadow-card)}
+    .modal-head{display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--gray-200)}
+    .modal-body{display:grid; grid-template-columns:1.2fr 1fr; gap:16px; padding:16px 20px}
+    .omr-preview{height:320px; border:1px solid var(--gray-200); border-radius:var(--radius-8); background:var(--surface)}
+    .details{display:flex; flex-direction:column; gap:12px}
+    .mini-bars{display:flex; align-items:flex-end; gap:8px; height:120px}
+    .mini-bars .bar{width:24px; background:var(--blue-600); border-radius:6px 6px 0 0}
+
+    /* Anchor pages: #upload and #results */
+    section{scroll-margin-top:100px}
+
+    /* Responsive */
+    @media (max-width: 1280px){
+      .container{padding-inline:72px}
+    }
+    @media (max-width: 1024px){
+      .container{padding-inline:32px}
+      .grid{grid-template-columns:repeat(12, 1fr)}
+      .span-8, .span-6, .span-4, .span-3 {grid-column:span 12}
+      .upload-box{width:100%}
+      .table-head, .table-row{grid-template-columns:90px 1fr 100px 110px 140px}
+      .modal-body{grid-template-columns:1fr}
+      .omr-preview{height:240px}
+    }
+    @media (max-width: 640px){
+      .header-inner{height:64px}
+      .nav span{display:none} /* collapse nav labels on very small */
+      .container{padding-inline:16px}
+      .table-head, .table-row{grid-template-columns:80px 1fr 90px 100px 120px}
+    }
+  </style>
+</head>
+<body style="background-color: black;">
+  <!-- Header / Nav -->
+  <header class="header" style="background-color: #00BFFF">
+    <div class="container header-inner">
+      <div class="brand">OMRify</div>
+      <nav class="nav">
+        <a href="./Home.html" style="color:black"><span>Dashboard</span></a>
+        <a href="./Result.html"style="color:black"><span>Results</span></a>
+        <a href="./Helper.html" style="color:black"><span>Help</span></a>
+        <!-- <a href="./chatbot.html" style="color:black"><span>Chatbot -->
+          <!-- <img src="./image.png" style="width: 19px; height: 19px padding-8px"> -->
+        </span></a>
+
+        <button class="logout" style="color:black" type="button">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Upload Page -->
+  <main id="upload" class="container" style="padding-top:16px;">
+    <section class="section grid">
+      <div class="span-12" style="text-align:center">
+        <h1 class="h1" style="color: white;">Upload OMR Sheets</h1>
+        <p class="subtle">Drag & drop scanned OMR sheets or click to browse. Supported: JPG, PNG, PDF.</p>
+      </div>
+    </section>
+
+    <section class="section grid">
+      <div class="span-12 upload-wrap">
+        <div class="upload-box">
+          <div class="upload-content">
+            <!-- Upload icon (inline SVG) -->
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true" role="img">
+              <path d="M12 16V4m0 0l-4 4m4-4l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M20 16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <p><label class="upload-button">
+              <input class="upload-input" type="file" multiple accept="image/png,image/jpeg,application/pdf" />
+              Drag & Drop or <u>Click to Upload</u>
+            </label></p>
+            <p class="muted">Max file size 150MB</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+     <!-- <section class="section grid">
+      <div class="span-12 list">
+        
+        <div class="file-row">
+          <div class="name">student_omr_01.pdf</div>
+          <div class="status"><span class="dot success"></span> Status: Valid</div>
+          <div class="spacer"></div>
+          <a class="icon-btn" href="#" title="Delete" aria-label="Delete">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m1 0v14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6h10Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+        <div class="file-row">
+          <div class="name">student_omr_02.jpg</div>
+          <div class="status"><span class="dot danger"></span> Status: Invalid</div>
+          <div class="spacer"></div>
+          <a class="icon-btn" href="#" title="Delete" aria-label="Delete">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m1 0v14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6h10Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+         </div>
+        <div class="file-row">
+          <div class="name">student_omr_03.png</div>
+          <div class="status"><span class="dot success"></span> Status: Valid</div>
+          <div class="spacer"></div>
+          <a class="icon-btn" href="#" title="Delete" aria-label="Delete">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m1 0v14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6h10Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>  -->
+
+    <section class="section grid" style="justify-items:center">
+      <div class="span-12" style="text-align:center">
+        <a class="btn-primary" href="./Result.html" title="Process Sheets">Process Sheets</a>
+      </div>
+    </section>
+  </main>
+
+
+
+  <!-- Footer -->
+  <!-- <footer>
+    © 2025 OMRify 
+  </footer> -->
+</body>
+</html>
