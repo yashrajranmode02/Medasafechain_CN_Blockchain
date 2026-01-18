@@ -34,7 +34,7 @@
 //     Received: 3,      // Distributor received
 //     Sold: 4           // Consumer purchased / Chemist sold
 //   };
-  
+
 
 // export const updateStatusHandler = async (req, res) => {
 //   try {
@@ -76,10 +76,7 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const abiPath = path.resolve(
-  __dirname,
-  "../../blockchain/artifacts/contracts/BatchRegistry.sol/BatchRegistry.json"
-);
+const abiPath = path.resolve(__dirname, "../config/BatchRegistry.json");
 
 // Validate ABI existence
 if (!fs.existsSync(abiPath)) {

@@ -11,11 +11,7 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ✅ Correct ABI path
-const abiPath = path.resolve(
-  __dirname,
-  "../../blockchain/artifacts/contracts/BatchRegistry.sol/BatchRegistry.json"
-);
+const abiPath = path.resolve(__dirname, "../config/BatchRegistry.json");
 const batchABI = JSON.parse(fs.readFileSync(abiPath, "utf-8"));
 
 // Environment
