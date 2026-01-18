@@ -74,3 +74,7 @@ Make sure your Hardhat node (npx hardhat node) is running before deploying or us
 You may need to connect Metamask to localhost:8545 and import one of the Hardhat private keys for testing.
 
 Backend should automatically pick up the deployed contract address if configured correctly.
+
+---
+
+**Deployed Link:** [https://medi-safe-chain.vercel.app/manufacturer](https://medi-safe-chain.vercel.app/manufacturer)
