@@ -1,0 +1,23 @@
+{
+  "lstm_sequence": {
+    "accuracy": 0.905,
+    "precision": 0.975,
+    "recall": 0.8210526315789474,
+    "f1": 0.8914285714285715,
+    "roc_auc": 0.9108771929824561
+  },
+  "transformer_risk": {
+    "accuracy": 0.935,
+    "precision": 1.0,
+    "recall": 0.8631578947368421,
+    "f1": 0.9265536723163842,
+    "roc_auc": 0.9046616541353384
+  },
+  "audit_note_transformer": {
+    "accuracy": 0.994,
+    "precision": 1.0,
+    "recall": 0.9495798319327731,
+    "f1": 0.9741379310344828,
+    "roc_auc": 0.9935806331613235
+  }
+}
