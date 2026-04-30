@@ -1,6 +1,7 @@
 // backend/controllers/consumerController.js
 import { ethers } from "ethers";
 import dotenv from "dotenv";
+import QRCode from "qrcode";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -30,6 +31,7 @@ const STATUS_MAP = {
   2: "Received by Distributor",
   3: "Delivered to Pharmacy",
   4: "Verified by Consumer",
+  6: "Recalled"
 };
 
 // ✅ Verify Batch (with batchId + qrPayload)
@@ -64,13 +66,35 @@ export const verifyBatchHandler = async (req, res) => {
 
     const statusNum = Number(batch[4]);
     const statusText = STATUS_MAP[statusNum] || `Unknown (${statusNum})`;
+    
+    // Fetch history
+    const dataPath = path.resolve(__dirname, '../data/sensorData.json');
+    let history = [];
+    if (fs.existsSync(dataPath)) {
+        const allData = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+        history = allData[batchId] || [];
+    }
+
+    const qrData = {
+      batchId,
+      medicineName: batch[1],
+      manufacturer: batch[2],
+      createdAt: new Date(Number(batch[3]) * 1000).toLocaleString(),
+      currentStatus: statusText,
+      history
+    };
+
+    const qrImage = await QRCode.toDataURL(JSON.stringify(qrData));
 
     res.status(200).json({
       success: true,
+      valid: true,
       message: "✅ Batch verified successfully",
       batchId,
+      medicineName: batch[1],
       currentStatus: statusText,
-      manufacturer: batch[2],
+      createdAt: batch[3].toString(),
+      qrImage
     });
   } catch (err) {
     console.error("❌ Error verifying batch:", err);

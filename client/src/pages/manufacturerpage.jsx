@@ -303,7 +303,7 @@
 //             />
 //           </div>
 //         )}
-        
+
 
 //         </div>
 //       </motion.div>
@@ -451,30 +451,25 @@ export default function ManufacturerPage() {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <BatchCard title="Batch ID">
-                  {JSON.parse(resp.qrPayload)?.batchId || "-"}
+                  {JSON.parse(resp.qrPayload || "{}")?.batchId || batchId}
                 </BatchCard>
-
-                <BatchCard title="Message">{resp.message || "-"}</BatchCard>
-                <BatchCard title="Transaction Hash">{resp.txHash || "-"}</BatchCard>
-                <BatchCard title="Status">Success ✅</BatchCard>
-              </div>
-
-              <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-4 rounded-md text-gray-200">
-                <h4 className="font-semibold mb-2 text-blue-300">Raw Response</h4>
-                <pre className="overflow-x-auto max-h-60 text-sm">
-                  {JSON.stringify(resp, null, 2)}
-                </pre>
+                <BatchCard title="Status" className="text-green-400 font-bold">Success ✅</BatchCard>
+                <div className="md:col-span-2">
+                  <BatchCard title="Message">{resp.message || "-"}</BatchCard>
+                </div>
               </div>
             </motion.div>
           )}
 
           {resp?.qrImage && (
-            <div className="flex justify-center mt-4">
+            <div className="mt-8 flex flex-col items-center gap-4 bg-white/5 p-8 rounded-2xl border border-white/10">
+              <h4 className="text-sm font-semibold text-blue-400 uppercase tracking-widest">Generated QR Code</h4>
               <img
                 src={resp.qrImage}
                 alt="QR Code"
-                className="rounded-xl border border-white/30 shadow-lg max-w-[200px]"
+                className="w-48 h-48 rounded-xl border-4 border-white/20 shadow-2xl bg-white p-2"
               />
+              <p className="text-xs text-gray-500">Scan this code to share batch details</p>
             </div>
           )}
         </div>

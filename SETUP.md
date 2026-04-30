@@ -25,7 +25,7 @@
 
 ---
 
-## 📦 Installation & Setup
+## 📦 Installation & Setu
 
 ### 1️⃣ **Blockchain Setup**
 

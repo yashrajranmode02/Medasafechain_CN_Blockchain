@@ -1,5 +1,5 @@
 require("@nomicfoundation/hardhat-ethers");
-require("dotenv").config();
+// require("dotenv").config();
 
 module.exports = {
   solidity: {

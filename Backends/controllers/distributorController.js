@@ -64,6 +64,7 @@
 // backend/controllers/distributorController.js
 import { ethers } from "ethers";
 import dotenv from "dotenv";
+import QRCode from "qrcode";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -147,10 +148,44 @@ export const updateStatusHandler = async (req, res) => {
 
     console.log(`✅ Transaction confirmed! Hash: ${tx.hash}`);
 
+    // Fetch batch details for QR payload
+    const batchDetails = await contract.getBatchDetails(batchHash);
+    const updatedStatusNum = Number(batchDetails[4]);
+    
+    const STATUS_MAP = {
+      0: "Created by Manufacturer",
+      1: "In Transit to Distributor",
+      2: "Received by Distributor",
+      3: "Delivered to Pharmacy",
+      4: "Verified by Consumer",
+      6: "Recalled"
+    };
+    const statusText = STATUS_MAP[updatedStatusNum] || `Unknown (${updatedStatusNum})`;
+
+    // Fetch history
+    const dataPath = path.resolve(__dirname, '../data/sensorData.json');
+    let history = [];
+    if (fs.existsSync(dataPath)) {
+        const allData = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+        history = allData[batchId] || [];
+    }
+
+    const qrData = {
+      batchId,
+      medicineName: batchDetails[1],
+      manufacturer: batchDetails[2],
+      createdAt: new Date(Number(batchDetails[3]) * 1000).toLocaleString(),
+      currentStatus: statusText,
+      history
+    };
+
+    // Generate QR Image for persistence on distributor side
+    const qrImage = await QRCode.toDataURL(JSON.stringify(qrData));
+
     return res.status(200).json({
       success: true,
       message: `Batch ${batchId} status updated to ${status}`,
-      txHash: tx.hash,
+      qrImage,
     });
 
   } catch (err) {

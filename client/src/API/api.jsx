@@ -16,10 +16,10 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
-  headers: { 
+  headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 20000,
+  timeout: 60000,
 });
 
 // 🧩 Helper to dynamically add roles
@@ -28,15 +28,27 @@ const getHeaders = (role) => ({
 });
 
 // ✅ Manufacturer: Create batch
-export const createBatch = (payload) => 
+export const createBatch = (payload) =>
   api.post('/manufacturer/create', payload, getHeaders('manufacturer'));
 
 // ✅ Distributor: Update batch status
-export const updateStatus = (payload) => 
+export const updateStatus = (payload) =>
   api.post('/distributor/update', payload, getHeaders('distributor'));
 
 // ✅ Consumer: Verify batch
-export const verifyBatch = (payload) => 
+export const verifyBatch = (payload) =>
   api.post('/consumer/verify', payload, getHeaders('consumer'));
+
+// ✅ NEW: Fetch sensor history
+export const getSensorHistory = (batchId) =>
+  api.get(`/sensor/history/${batchId}`, getHeaders('consumer'));
+
+// ✅ Auth: Signup
+export const signup = (payload) =>
+  api.post('/auth/signup', payload);
+
+// ✅ Auth: Login
+export const login = (payload) =>
+  api.post('/auth/login', payload);
 
 export default api;

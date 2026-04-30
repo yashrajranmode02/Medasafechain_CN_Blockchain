@@ -1,2 +1,11 @@
 .env
 node_modules/
+*.bak
+*.patch
+*.log
+out.txt
+test_out.txt
+client/index_broken.html
+Backends/data/sensorData.json
+Backends/data/recalledBatches.json
+Backends/data/users.json

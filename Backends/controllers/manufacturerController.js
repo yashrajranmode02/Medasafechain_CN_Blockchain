@@ -50,9 +50,38 @@ export const createBatchHandler = async (req, res) => {
 
     const qrImage = await QRCode.toDataURL(qrPayload);
 
+    // 🚀 Start Internal Virtual Sensor Simulation
+    let simStep = 0;
+    let isFailing = false;
+    const interval = setInterval(async () => {
+        try {
+            let temp;
+            // 10% chance to fail after 5 readings
+            if (simStep > 5 && Math.random() < 0.1) isFailing = true;
+            
+            temp = isFailing ? (38 + Math.random() * 7) : (20 + Math.random() * 5);
+            
+            const res = await fetch(`http://localhost:${process.env.PORT || 5000}/api/sensor/data`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ batchId, temperature: temp })
+            });
+            const data = await res.json();
+            
+            simStep++;
+            // Stop simulating immediately if recalled to halt temperature creation requests
+            if (data.anomalyDetected) {
+                console.log(`🛑 BATCH RECALLED! Halting sensor simulation for ${batchId}.`);
+                clearInterval(interval);
+            }
+        } catch(e) {
+            console.error("Internal Sim Error:", e.message);
+        }
+    }, 5000);
+
     res.status(200).json({
       success: true,
-      message: "✅ Batch created successfully",
+      message: "✅ Batch created and virtual sensor securely attached!",
       txHash: tx.hash,
       qrPayload,
       qrImage,
