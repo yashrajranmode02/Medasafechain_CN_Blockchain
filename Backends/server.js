@@ -16,6 +16,7 @@ import blockchainRoutes from "./routes/blockchainRoutes.js";
 import sensorRoutes from "./routes/sensorRoutes.js";console.log("Routes loaded");
 console.log("Routes loaded");
 import authRoutes from "./routes/authRoutes.js";
+import dlRoutes from "./routes/dlRoutes.js";
 console.log("Routes loaded");
 
 // Middleware
@@ -38,6 +39,7 @@ app.use("/api/consumer", consumerRoutes);
 app.use("/api/blockchain", blockchainRoutes);
 app.use("/api/sensor", sensorRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/dl", dlRoutes);
 
 // Global error handler (last middleware)
 app.use(errorHandler);

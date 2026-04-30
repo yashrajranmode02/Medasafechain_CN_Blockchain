@@ -9,6 +9,7 @@ import DistributorPage from "./pages/Distributorpage";
 import ConsumerPage from "./pages/consumerpage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import AIDashboard from "./pages/AIDashboard";
 
 // Protected route: redirects to /login if not authenticated or wrong role
 function ProtectedRoute({ children, requiredRole }) {
@@ -54,6 +55,9 @@ function AnimatedRoutes() {
           } />
           <Route path="/consumer" element={
             <ProtectedRoute requiredRole="consumer"><ConsumerPage /></ProtectedRoute>
+          } />
+          <Route path="/ai-insights" element={
+            <ProtectedRoute><AIDashboard /></ProtectedRoute>
           } />
 
           {/* Default redirect */}

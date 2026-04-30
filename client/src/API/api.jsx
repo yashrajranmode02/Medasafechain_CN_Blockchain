@@ -51,4 +51,8 @@ export const signup = (payload) =>
 export const login = (payload) =>
   api.post('/auth/login', payload);
 
+// ✅ DL: Fetch metrics
+export const getDLMetrics = () =>
+  api.get('/dl/metrics');
+
 export default api;

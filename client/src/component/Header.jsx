@@ -61,6 +61,9 @@ export default function Header() {
                 Consumer
               </NavLink>
             )}
+            <NavLink to="/ai-insights" className={({ isActive }) => (isActive ? active : inactive)}>
+              AI Insights
+            </NavLink>
           </nav>
         )}
 
